@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Go WASM tiny demo</title>
+</head>
+<body>
+  <h1>Go → WASM → Browser</h1>
+  <div id="out">loading…</div>
+
+  <script src="./wasm_exec.js"></script>
+  <script type="module">
+    const go = new Go();
+    const res = await WebAssembly.instantiateStreaming(
+      fetch("./main.wasm"),
+      go.importObject
+    );
+    go.run(res.instance);
+
+    const result = globalThis.calc(3, 4); // 3² + 4² = 25
+
+    document.getElementById("out").textContent =
+      `calc(3,4) = ${result}`;
+
+  </script>
+</body>
+</html>
